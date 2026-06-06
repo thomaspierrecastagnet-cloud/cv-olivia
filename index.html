@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olivia Duclaux — Graphiste Print &amp; Digital</title>
+<style>
+:root{
+  --bg:#fafafa;--card:#fff;--border:#f0e8e8;--dark:#1a1a2e;--muted:#888;
+  --pink:#e8436a;--orange:#f7873a;
+  --gradient:linear-gradient(135deg,#e8436a,#f7873a);
+  --gradient-soft:linear-gradient(135deg,rgba(232,67,106,0.08),rgba(247,135,58,0.08));
+  --radius:16px;--radius-sm:10px;--shadow:0 4px 24px rgba(232,67,106,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--dark);font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+#auroraCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5;}
+nav,section,#hero,footer,.modal-overlay,.divider{position:relative;z-index:1;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5vw;height:52px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 20px rgba(232,67,106,0.06);}
+.nav-logo{font-size:15px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{color:var(--muted);font-size:13px;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--pink);}
+.reveal{opacity:0;transform:translateY(48px);transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);}
+.reveal-left{opacity:0;transform:translateX(-56px);transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);}
+.reveal-right{opacity:0;transform:translateX(56px);transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);}
+.reveal-scale{opacity:0;transform:scale(0.88);transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1);}
+.reveal-blur{opacity:0;filter:blur(12px);transform:translateY(24px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1),filter .9s ease;}
+.reveal.visible,.reveal-left.visible,.reveal-right.visible,.reveal-scale.visible{opacity:1;transform:none;}
+.reveal-blur.visible{opacity:1;transform:none;filter:blur(0);}
+.d1{transition-delay:.07s!important;}.d2{transition-delay:.14s!important;}.d3{transition-delay:.21s!important;}.d4{transition-delay:.28s!important;}
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:120px 5vw 80px;width:100%;gap:60px;background:linear-gradient(160deg,#fff9f9 0%,#fff5f0 50%,#fff 100%);}
+.hero-text{display:flex;flex-direction:column;align-items:flex-start;}
+.hero-photo-wrap{display:flex;justify-content:center;align-items:center;opacity:0;animation:fadeUp .8s ease .1s forwards;}
+.hero-photo{width:340px;height:340px;border-radius:50%;object-fit:cover;border:4px solid transparent;background:linear-gradient(white,white) padding-box,var(--gradient) border-box;display:block;box-shadow:0 20px 60px rgba(232,67,106,0.2);}
+.hero-eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fadeUp .8s ease .2s forwards;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:600;}
+.hero-name{font-size:clamp(42px,5.5vw,80px);font-weight:800;color:var(--dark);line-height:1.02;letter-spacing:-2px;margin-bottom:12px;opacity:0;animation:fadeUp .8s ease .4s forwards;transform-style:preserve-3d;will-change:transform,opacity;cursor:default;}
+.name-line{display:block;}.name-letter{display:inline-block;}
+.hero-tag{display:inline-block;background:var(--gradient);color:#fff;font-size:13px;font-weight:600;padding:6px 18px;border-radius:980px;margin-bottom:20px;opacity:0;animation:fadeUp .8s ease .55s forwards;}
+.hero-accroche{font-size:15px;color:#666;max-width:500px;margin:0 0 32px;line-height:1.7;opacity:0;animation:fadeUp .8s ease .8s forwards;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s ease 1s forwards;}
+.btn-primary{background:var(--gradient);color:#fff;padding:13px 28px;border-radius:980px;font-size:15px;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity .2s,transform .15s;box-shadow:0 8px 24px rgba(232,67,106,0.3);}
+.btn-primary:hover{opacity:0.9;transform:scale(1.02);}
+.btn-ghost{background:transparent;color:var(--pink);padding:13px 28px;border-radius:980px;font-size:15px;font-weight:500;border:2px solid rgba(232,67,106,0.3);cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s,transform .15s;}
+.btn-ghost:hover{background:rgba(232,67,106,0.06);transform:scale(1.02);}
+.hero-stats{display:flex;gap:32px;margin-top:32px;opacity:0;animation:fadeUp .8s ease 1.1s forwards;}
+.hero-stat-val{font-size:28px;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+section{padding:100px 5vw;width:100%;}
+.section-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:600;}
+.section-title{font-size:clamp(32px,4vw,52px);font-weight:800;color:var(--dark);letter-spacing:-1.5px;line-height:1.05;margin-bottom:48px;}
+.divider{height:1px;background:var(--border);width:100%;position:relative;z-index:1;}
+.skill-group-label{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+.skill-group-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.skill-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:18px;cursor:default;transition:border-color .2s,transform .2s,box-shadow .2s;position:relative;box-shadow:0 2px 12px rgba(232,67,106,0.04);}
+.skill-card.clickable{cursor:pointer;}
+.skill-card.clickable:hover{border-color:rgba(232,67,106,0.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(232,67,106,0.12);}
+.skill-card-hint{position:absolute;top:12px;right:14px;font-size:10px;color:var(--pink);opacity:0;transition:opacity .2s;}
+.skill-card.clickable:hover .skill-card-hint{opacity:1;}
+.skill-logo{width:34px;height:34px;object-fit:contain;margin-bottom:10px;border-radius:6px;}
+.skill-dot{width:28px;height:28px;border-radius:7px;margin-bottom:10px;}
+.skill-name{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px;}
+.skill-cat{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.skill-circle-wrap{display:flex;justify-content:flex-end;margin-top:6px;}
+.skill-circle{position:relative;width:36px;height:36px;}
+.skill-circle svg{transform:rotate(-90deg);width:36px;height:36px;}
+.skill-circle .track{fill:none;stroke:#f0e8e8;stroke-width:3;}
+.skill-circle .fill{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1);}
+.skill-circle .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--pink);}
+.radar-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+.radar-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;width:100%;}
+.radar-legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);}
+.radar-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border:1.5px solid var(--border);border-radius:20px;width:98vw;max-width:1100px;max-height:94vh;overflow-y:auto;animation:modalIn .3s ease;box-shadow:0 20px 60px rgba(232,67,106,0.15);}
+.modal::-webkit-scrollbar{width:4px;}.modal::-webkit-scrollbar-thumb{background:#f0d0d0;border-radius:4px;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:2;gap:16px;}
+.modal-title-block{display:flex;align-items:center;gap:14px;}
+.modal-dot{width:36px;height:36px;border-radius:9px;flex-shrink:0;}
+.modal-title{font-size:20px;font-weight:700;color:var(--dark);}
+.modal-subtitle{font-size:13px;color:var(--muted);margin-top:2px;}
+.modal-close{width:32px;height:32px;border-radius:50%;background:#f5f5f5;border:1px solid var(--border);color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:#ffe0e0;color:var(--pink);}
+.modal-body{padding:20px 24px 32px;}
+.modal-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:24px;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.gallery-grid.small-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.gallery-grid.digital-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.gallery-grid.digital-grid .gallery-img-wrap{aspect-ratio:16/5;height:auto;}
+.gallery-grid.digital-grid .gallery-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.gallery-grid.small-grid .gallery-img-wrap{aspect-ratio:unset;height:160px;}
+.gallery-grid.small-grid .gallery-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.gallery-grid.small-grid .gallery-info{padding:6px 8px;}
+.gallery-grid.small-grid .gallery-name{font-size:10px;}
+.gallery-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s,transform .2s;}
+.gallery-item:hover{border-color:rgba(232,67,106,0.3);transform:translateY(-2px);}
+.gallery-img-wrap{width:100%;aspect-ratio:4/3;background:#fafafa;overflow:hidden;position:relative;}
+.gallery-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.gallery-delete{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #ddd;color:#999;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;line-height:1;}
+.edit-mode .gallery-delete{display:flex;}
+.edit-mode .gallery-item:hover .gallery-delete{opacity:1;}
+.gallery-delete:hover{background:#ffe0e0;color:var(--pink);}
+.gallery-download{position:absolute;top:8px;left:8px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #ddd;color:#999;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;line-height:1;text-decoration:none;}
+.gallery-item:hover .gallery-download{opacity:1;}
+.gallery-download:hover{color:var(--pink);}
+.gallery-info{padding:12px;}
+.gallery-name{font-size:13px;font-weight:600;color:var(--dark);}
+.gallery-empty{grid-column:1/-1;text-align:center;padding:48px 20px;color:#ccc;font-size:13px;line-height:2;}
+.add-creation-btn{display:none;align-items:center;gap:8px;margin-top:20px;background:transparent;border:1.5px dashed rgba(232,67,106,0.3);color:var(--pink);font-size:13px;padding:11px 20px;border-radius:980px;cursor:pointer;}
+.add-creation-btn.visible{display:flex;}
+.file-input{display:none;}
+.section-sep{height:1px;background:#f0e8e8;margin:24px 0;}
+.popup-section-title{font-size:12px;font-weight:700;color:var(--pink);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.popup-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:980px;background:var(--gradient-soft);color:var(--pink);border:1px solid rgba(232,67,106,0.2);}
+.exp-list{display:flex;flex-direction:column;gap:12px;}
+.exp-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:24px 32px;display:grid;grid-template-columns:64px 1fr auto;align-items:center;gap:24px;transition:border-color .2s,transform .2s;box-shadow:0 2px 12px rgba(232,67,106,0.04);}
+.exp-card:hover{border-color:rgba(232,67,106,0.3);transform:translateY(-2px);}
+.exp-card.featured{border-color:rgba(232,67,106,0.35);background:linear-gradient(135deg,#fff9f9,#fff5f0);}
+.exp-logo{width:56px;height:56px;border-radius:10px;background:var(--gradient-soft);border:1.5px solid rgba(232,67,106,0.15);display:flex;align-items:center;justify-content:center;color:var(--pink);font-size:11px;font-weight:700;}
+.exp-role{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:5px;}
+.exp-co{font-size:14px;color:var(--pink);font-weight:600;margin-bottom:8px;}
+.exp-missions{font-size:13px;color:#666;line-height:1.6;}
+.exp-date{font-size:12px;color:var(--orange);margin-top:6px;font-weight:500;}
+.exp-badge{background:var(--gradient);color:#fff;font-size:11px;padding:5px 14px;border-radius:980px;white-space:nowrap;flex-shrink:0;font-weight:600;}
+.exp-badge.neutral{background:var(--gradient-soft);color:var(--pink);border:1px solid rgba(232,67,106,0.2);}
+.formation-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.formation-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:24px;transition:border-color .2s;box-shadow:0 2px 12px rgba(232,67,106,0.04);}
+.formation-card:hover{border-color:rgba(232,67,106,0.3);}
+.formation-card.featured{border-color:rgba(232,67,106,0.35);background:linear-gradient(135deg,#fff9f9,#fff5f0);}
+.formation-year{font-size:12px;color:var(--orange);font-weight:600;margin-bottom:8px;}
+.formation-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:5px;line-height:1.3;}
+.formation-school{font-size:13px;color:var(--muted);margin-bottom:8px;}
+.formation-type{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:980px;background:var(--gradient-soft);color:var(--pink);border:1px solid rgba(232,67,106,0.2);}
+.projets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.projet-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:0 2px 12px rgba(232,67,106,0.04);position:relative;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s;}
+.projet-card:hover{border-color:rgba(232,67,106,0.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(232,67,106,0.12);}
+.projet-card-hint{position:absolute;top:12px;right:14px;font-size:10px;color:var(--pink);opacity:0;transition:opacity .2s;}
+.projet-card:hover .projet-card-hint{opacity:1;}
+.projet-icon{font-size:28px;margin-bottom:12px;}
+.projet-tag{font-size:11px;color:var(--pink);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-weight:600;}
+.projet-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px;}
+.projet-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.recompense-card{background:linear-gradient(135deg,#fff9f9,#fff5f0);border:1.5px solid rgba(232,67,106,0.25);border-radius:var(--radius);padding:28px 32px;display:flex;align-items:center;gap:20px;margin-top:20px;}
+.recompense-icon{font-size:36px;flex-shrink:0;}
+.recompense-title{font-size:16px;font-weight:700;color:var(--pink);margin-bottom:6px;}
+.recompense-desc{font-size:13px;color:#666;line-height:1.6;}
+.soft-grid{display:flex;flex-wrap:wrap;gap:10px;}
+.soft-pill{background:#fff;border:1.5px solid var(--border);color:var(--muted);font-size:14px;padding:8px 18px;border-radius:980px;transition:all .2s;}
+.soft-pill:hover{color:var(--pink);border-color:rgba(232,67,106,0.3);}
+#contact{text-align:center;background:linear-gradient(160deg,#fff9f9,#fff5f0,#fff);}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:40px;}
+.contact-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:20px;text-align:left;box-shadow:0 2px 12px rgba(232,67,106,0.04);}
+.contact-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+.contact-value{font-size:14px;color:var(--dark);font-weight:600;}
+.contact-form{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:40px;max-width:640px;margin:0 auto;text-align:left;box-shadow:var(--shadow);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-group{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.form-group label{font-size:13px;color:var(--muted);font-weight:500;}
+.form-group input,.form-group textarea{background:#fafafa;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:13px 16px;color:var(--dark);font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;resize:vertical;}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--pink);background:#fff;}
+.form-group textarea{min-height:120px;}
+.form-submit{width:100%;background:var(--gradient);color:#fff;padding:14px;border-radius:980px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:opacity .2s,transform .15s;margin-top:6px;box-shadow:0 8px 24px rgba(232,67,106,0.3);}
+.form-submit:hover{opacity:0.9;transform:scale(1.01);}
+footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;background:#fff;position:relative;z-index:1;}
+.yt-card{border-radius:12px;overflow:hidden;border:1.5px solid #f0e8e8;background:#fff;box-shadow:0 2px 12px rgba(232,67,106,0.04);cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.yt-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(232,67,106,0.12);}
+.yt-thumb{position:relative;overflow:hidden;}
+.yt-thumb img{width:100%;height:auto;display:block;}
+.yt-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.2);}
+.yt-play-btn{width:52px;height:52px;background:#ff0000;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.yt-label{padding:12px 14px;font-size:13px;font-weight:600;color:var(--dark);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(16px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@media(max-width:768px){
+  nav{padding:0 5vw;}.nav-links{gap:16px;}section{padding:80px 5vw;}
+  #hero{grid-template-columns:1fr;padding:100px 5vw 60px;text-align:center;}
+  .hero-text{align-items:center;}.hero-photo{width:200px;height:200px;}.hero-photo-wrap{order:-1;}
+  .form-row{grid-template-columns:1fr;}.exp-card{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:8px;text-align:center;}
+}
+</style>
+</head>
+<body>
+<canvas id="auroraCanvas"></canvas>
+<nav>
+  <div class="nav-logo">Olivia Duclaux</div>
+  <ul class="nav-links">
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#projets">Portfolio</a></li>
+    <li><a href="#experience">Expérience</a></li>
+    <li><a href="#formation">Formation</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Marketing · Communication · Digital</div>
+    <h1 class="hero-name" id="heroName">
+      <span class="name-line" id="nameLine1"></span>
+      <span class="name-line" id="nameLine2"></span>
+    </h1>
+    <div class="hero-tag">Chargée de Marketing Digital</div>
+    <p class="hero-accroche">Étudiante en Master Expert en Stratégie Digitale, passionnée par le marketing digital, la création de contenu et la communication de marque. Je développe des stratégies digitales percutantes et conçois des expériences visuelles cohérentes, du contenu réseaux sociaux à la gestion de site web.</p>
+    <div class="hero-btns">
+      <a href="#projets" class="btn-primary">Voir mon portfolio</a>
+      <a href="#contact" class="btn-ghost">Me contacter</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val">3+</div><div class="hero-stat-label">Ans d'exp.</div></div>
+      <div><div class="hero-stat-val">5</div><div class="hero-stat-label">Outils Adobe</div></div>
+      <div><div class="hero-stat-val">2</div><div class="hero-stat-label">Prix remportés</div></div>
+    </div>
+  </div>
+  <div class="hero-photo-wrap">
+    <img class="hero-photo" src="photo-profil.JPG" alt="Olivia Duclaux">
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="competences" style="display:grid;grid-template-columns:1fr 420px;gap:48px;align-items:start;">
+  <div>
+    <div class="reveal-blur">
+      <div class="section-label">Outils</div>
+      <h2 class="section-title">Compétences</h2>
+      
+    </div>
+    <!-- SUITE ADOBE -->
+    <div class="reveal-left">
+      <div class="skill-group-label"><div class="skill-group-dot" style="background:#e8436a;"></div>Suite Adobe</div>
+      <div class="skills-grid">
+        <div class="skill-card"><img src="Logo-illustrator.png" class="skill-logo" alt="Illustrator"><div class="skill-name">Illustrator</div><div class="skill-cat">Illustration vectorielle</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><defs><linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#e8436a"/><stop offset="100%" style="stop-color:#f7873a"/></linearGradient></defs><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="100" style="stroke:url(#pg);stroke-dashoffset:0;"/></svg><div class="label">100%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-photoshop.png" class="skill-logo" alt="Photoshop"><div class="skill-name">Photoshop</div><div class="skill-cat">Retouche &amp; visuels</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="90" style="stroke:#e8436a;stroke-dashoffset:10;"/></svg><div class="label">90%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-lightroom.png" class="skill-logo" alt="Lightroom"><div class="skill-name">Lightroom</div><div class="skill-cat">Retouche photo</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="75" style="stroke:#f7873a;stroke-dashoffset:25;"/></svg><div class="label">75%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-indesign.png" class="skill-logo" alt="InDesign"><div class="skill-name">InDesign</div><div class="skill-cat">Mise en page</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="60" style="stroke:#e8436a;stroke-dashoffset:40;"/></svg><div class="label">60%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-after-effects.png" class="skill-logo" alt="After Effects"><div class="skill-name">After Effects</div><div class="skill-cat">Motion design</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="30" style="stroke:#f7873a;stroke-dashoffset:70;"/></svg><div class="label">30%</div></div></div></div>
+      </div>
+    </div>
+    <!-- WEB & DIGITAL -->
+    <div style="margin-top:28px;" class="reveal-right">
+      <div class="skill-group-label"><div class="skill-group-dot" style="background:#f7873a;"></div>Web &amp; Digital</div>
+      <div class="skills-grid">
+        <div class="skill-card clickable" onclick="openModal('wordpress')"><span class="skill-card-hint">Voir →</span><img src="Logo-wordpress.png" class="skill-logo" alt="WordPress"><div class="skill-name">WordPress</div><div class="skill-cat">CMS &amp; sites web</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="100" style="stroke:#e8436a;stroke-dashoffset:0;"/></svg><div class="label">100%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-seo.png" class="skill-logo" alt="SEO"><div class="skill-name">SEO</div><div class="skill-cat">Référencement</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="90" style="stroke:#f7873a;stroke-dashoffset:10;"/></svg><div class="label">90%</div></div></div></div>
+        <div class="skill-card"><img src="logo-html-css.png" class="skill-logo" alt="HTML/CSS"><div class="skill-name">HTML / CSS</div><div class="skill-cat">Intégration web</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="80" style="stroke:#e8436a;stroke-dashoffset:20;"/></svg><div class="label">80%</div></div></div></div>
+        <div class="skill-card"><img src="logo-typeform.webp" class="skill-logo" alt="Typeform"><div class="skill-name">Typeform</div><div class="skill-cat">Formulaires</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="80" style="stroke:#f7873a;stroke-dashoffset:20;"/></svg><div class="label">80%</div></div></div></div>
+        <div class="skill-card clickable" onclick="openModal('wix')"><span class="skill-card-hint">Voir →</span><img src="Logo-wix.png" class="skill-logo" alt="Wix"><div class="skill-name">Wix</div><div class="skill-cat">CMS no-code</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="70" style="stroke:#e8436a;stroke-dashoffset:30;"/></svg><div class="label">70%</div></div></div></div>
+        <div class="skill-card clickable" onclick="openModal('shopify')"><span class="skill-card-hint">Voir →</span><img src="Logo-shopify.png" class="skill-logo" alt="Shopify"><div class="skill-name">Shopify</div><div class="skill-cat">E-commerce</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="50" style="stroke:#f7873a;stroke-dashoffset:50;"/></svg><div class="label">50%</div></div></div></div>
+        <div class="skill-card"><img src="logo-guest-suite.png" class="skill-logo" alt="Guest Suite"><div class="skill-name">Guest Suite</div><div class="skill-cat">Avis clients</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="80" style="stroke:#e8436a;stroke-dashoffset:20;"/></svg><div class="label">80%</div></div></div></div>
+      </div>
+    </div>
+    <!-- EMAIL -->
+    <div style="margin-top:28px;" class="reveal-left">
+      <div class="skill-group-label"><div class="skill-group-dot" style="background:#e8436a;"></div>Email Marketing</div>
+      <div class="skills-grid">
+        <div class="skill-card"><img src="logo-mailjet.png" class="skill-logo" alt="Mailjet"><div class="skill-name">Mailjet</div><div class="skill-cat">Email marketing</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="100" style="stroke:#e8436a;stroke-dashoffset:0;"/></svg><div class="label">100%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-brevo.png" class="skill-logo" alt="Brevo"><div class="skill-name">Brevo</div><div class="skill-cat">Email marketing</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="60" style="stroke:#f7873a;stroke-dashoffset:40;"/></svg><div class="label">60%</div></div></div></div>
+      </div>
+    </div>
+    <!-- RÉSEAUX SOCIAUX -->
+    <div style="margin-top:28px;" class="reveal-right">
+      <div class="skill-group-label"><div class="skill-group-dot" style="background:#f7873a;"></div>Réseaux sociaux</div>
+      <div class="skills-grid">
+        <div class="skill-card"><img src="logo-cosmicdata.jpeg" class="skill-logo" alt="Cosmic Data"><div class="skill-name">Cosmic Data</div><div class="skill-cat">Analytics</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="100" style="stroke:#e8436a;stroke-dashoffset:0;"/></svg><div class="label">100%</div></div></div></div>
+        <div class="skill-card"><img src="logo-facebook.webp" class="skill-logo" alt="Facebook"><div class="skill-name">Facebook</div><div class="skill-cat">Social media</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="95" style="stroke:#f7873a;stroke-dashoffset:5;"/></svg><div class="label">95%</div></div></div></div>
+        <div class="skill-card"><img src="logo-tiktok.png" class="skill-logo" alt="TikTok"><div class="skill-name">TikTok</div><div class="skill-cat">Social media</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="95" style="stroke:#e8436a;stroke-dashoffset:5;"/></svg><div class="label">95%</div></div></div></div>
+        <div class="skill-card"><img src="logo-instagram.png" class="skill-logo" alt="Instagram"><div class="skill-name">Instagram</div><div class="skill-cat">Social media</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="90" style="stroke:#f7873a;stroke-dashoffset:10;"/></svg><div class="label">90%</div></div></div></div>
+        <div class="skill-card"><img src="Logo-meta.png" class="skill-logo" alt="Meta Business"><div class="skill-name">Meta Business</div><div class="skill-cat">Gestion pub</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="90" style="stroke:#e8436a;stroke-dashoffset:10;"/></svg><div class="label">90%</div></div></div></div>
+        <div class="skill-card"><img src="logo-youtube.png" class="skill-logo" alt="YouTube"><div class="skill-name">YouTube</div><div class="skill-cat">Vidéo</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="90" style="stroke:#f7873a;stroke-dashoffset:10;"/></svg><div class="label">90%</div></div></div></div>
+        <div class="skill-card"><img src="logo-linkedin.webp" class="skill-logo" alt="LinkedIn"><div class="skill-name">LinkedIn</div><div class="skill-cat">Réseau pro</div><div class="skill-circle-wrap"><div class="skill-circle"><svg viewBox="0 0 38 38"><circle class="track" cx="19" cy="19" r="15"/><circle class="fill" cx="19" cy="19" r="15" data-level="80" style="stroke:#e8436a;stroke-dashoffset:20;"/></svg><div class="label">80%</div></div></div></div>
+      </div>
+    </div>
+  </div>
+  <!-- RADAR -->
+  <div class="radar-wrap reveal-scale" style="position:sticky;top:80px;align-self:start;">
+    <div style="position:relative;width:320px;height:320px;margin:0 auto;">
+      <canvas id="radarChart" style="width:320px;height:320px;display:block;"></canvas>
+      <div id="radarLabels" style="position:absolute;inset:0;pointer-events:none;"></div>
+    </div>
+    <div class="radar-legend" id="radarLegend"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="projets">
+  <div class="reveal-blur"><div class="section-label">Réalisations</div><h2 class="section-title">Mon Portfolio</h2><p style="font-size:13px;color:var(--muted);margin-top:-32px;margin-bottom:36px;">Clique sur un projet pour voir mes créations</p></div>
+  <div class="projets-grid">
+    <div class="projet-card reveal" onclick="openProjet('catalogues_affiches')"><span class="projet-card-hint">Voir →</span><div class="projet-icon">📚</div><div class="projet-tag">Print · Graphisme</div><div class="projet-title">Catalogues &amp; Affiches</div><div class="projet-desc">Conception de catalogues, brochures et affiches print et digitaux.</div></div>
+    <div class="projet-card reveal d1" onclick="openProjet('flyers')"><span class="projet-card-hint">Voir →</span><div class="projet-icon">🎨</div><div class="projet-tag">Graphisme</div><div class="projet-title">Flyers</div><div class="projet-desc">Création de flyers impactants pour événements, promotions et communication.</div></div>
+    <div class="projet-card reveal d2" onclick="openProjet('social')"><span class="projet-card-hint">Voir →</span><div class="projet-icon">📱</div><div class="projet-tag">Social Media</div><div class="projet-title">Visuels Réseaux Sociaux</div><div class="projet-desc">Création de contenus visuels adaptés à chaque plateforme sociale.</div></div>
+    <div class="projet-card reveal d3" onclick="openProjet('video')"><span class="projet-card-hint">Voir →</span><div class="projet-icon">🎬</div><div class="projet-tag">Vidéo</div><div class="projet-title">Montage Vidéo &amp; Motion Design</div><div class="projet-desc">Production de contenus vidéo et animations pour les réseaux et le web.</div></div>
+    <div class="projet-card reveal d4" onclick="openProjet('sites')"><span class="projet-card-hint">Voir →</span><div class="projet-icon">🌐</div><div class="projet-tag">Web</div><div class="projet-title">Création de Sites Internet</div><div class="projet-desc">Création et gestion de sites web sous WordPress et Wix.</div></div>
+    <div class="projet-card reveal" onclick="openProjet('logos')" style="transition-delay:.35s!important;"><span class="projet-card-hint">Voir →</span><div class="projet-icon">✏️</div><div class="projet-tag">Identité visuelle</div><div class="projet-title">Logos &amp; Animations</div><div class="projet-desc">Création de logos et animations de marque pour différents clients.</div></div>
+    <div class="projet-card reveal" onclick="openProjet('print')" style="transition-delay:.42s!important;"><span class="projet-card-hint">Voir →</span><div class="projet-icon">🖨️</div><div class="projet-tag">Print</div><div class="projet-title">Supports Print</div><div class="projet-desc">Marque-pages, pochettes et roll-ups pour différents clients.</div></div>
+    <div class="projet-card reveal" onclick="openProjet('digital')" style="transition-delay:.49s!important;"><span class="projet-card-hint">Voir →</span><div class="projet-icon">💻</div><div class="projet-tag">Digital</div><div class="projet-title">Supports Digitaux</div><div class="projet-desc">Bandeaux emailing, bandeaux mail et signatures de mail.</div></div>
+  </div>
+  <div class="recompense-card reveal">
+    <div class="recompense-icon">🏆</div>
+    <div><div class="recompense-title">Gagnante du Concours Hermès</div><div class="recompense-desc">Prix de la qualité du montage vidéo — 2 prix remportés sur 3. Présentation de mon diplôme et de mon entreprise d'alternance.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="experience">
+  <div class="reveal-blur"><div class="section-label">Parcours professionnel</div><h2 class="section-title">Expérience</h2></div>
+  <div class="exp-list">
+    <div class="exp-card featured reveal"><div class="exp-logo">GM</div><div><div class="exp-role">Assistante Marketing &amp; Communication</div><div class="exp-co">Gemelli Mobilité — Avignon</div><div class="exp-missions">Création de supports print et digitaux (affiches, flyers, catalogues, kakémonos, visuels presse, cartes de visite, roll up). Création de visuels pour les réseaux sociaux (Facebook, Instagram, LinkedIn, TikTok). Montage vidéo et création de contenus audiovisuels. Gestion et mise à jour des sites internet sous WordPress. Création de newsletters et campagnes e-mailing. Organisation d'événements, gestion des partenariats et sponsoring. Optimisation SEO et amélioration continue des supports.</div><div class="exp-date">2024 → 2026</div></div><div class="exp-badge">Alternance</div></div>
+    <div class="exp-card reveal d1"><div class="exp-logo">GM</div><div><div class="exp-role">Assistante Marketing &amp; Communication</div><div class="exp-co">Gemelli Mobilité — Avignon</div><div class="exp-missions">Création des sites internet et réseaux sociaux. Création de newsletters, montages vidéos, page Google. Création graphique et mise en page de supports de communication. Suivi des événements et gestion des partenariats.</div><div class="exp-date">2023 → 2024</div></div><div class="exp-badge neutral">Alternance</div></div>
+    <div class="exp-card reveal d2"><div class="exp-logo">HP</div><div><div class="exp-role">Réceptionniste &amp; Chef de Rang</div><div class="exp-co">Hôtel Restaurant du Parc — Fontaine de Vaucluse</div><div class="exp-missions">Accueil et service client. Organisation des plannings et gestion des réservations. Participation à l'organisation d'événements.</div><div class="exp-date">2021 → 2023</div></div><div class="exp-badge neutral">Alternance</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="formation">
+  <div class="reveal-blur"><div class="section-label">Parcours académique</div><h2 class="section-title">Formation</h2></div>
+  <div class="formation-grid reveal">
+    <div class="formation-card featured"><div class="formation-year">2025 → 2026</div><div class="formation-title">Master Expert Stratégie Digitale option Graphisme</div><div class="formation-school">Groupe Belmont, Avignon</div><div class="formation-type">Alternance</div></div>
+    <div class="formation-card featured"><div class="formation-year">2024 → 2025</div><div class="formation-title">Master Manager Marketing Digital &amp; Communication</div><div class="formation-school">Académie Vaucluse Provence, Avignon</div><div class="formation-type">Alternance</div></div>
+    <div class="formation-card"><div class="formation-year">2023 → 2024</div><div class="formation-title">Bachelor Chef de Projet E-Business &amp; Communication Digitale</div><div class="formation-school">Groupe Belmont, Avignon</div><div class="formation-type">Alternance</div></div>
+    <div class="formation-card"><div class="formation-year">2021 → 2023</div><div class="formation-title">BTS Management Hôtellerie Restauration</div><div class="formation-school">École hôtelière d'Avignon</div><div class="formation-type">Alternance</div></div>
+    <div class="formation-card"><div class="formation-year">2020 → 2021</div><div class="formation-title">Bac STI2D option ITEC</div><div class="formation-school">Lycée Jean Henri Fabre, Carpentras</div><div class="formation-type" style="background:#f5f5f5;color:#999;border:1px solid #ddd;">Initial</div></div>
+  </div>
+  <div style="margin-top:48px;" class="reveal-left"><div class="section-label" style="margin-bottom:20px;">Qualités</div><div class="soft-grid"><span class="soft-pill">Créative</span><span class="soft-pill">Rigoureuse</span><span class="soft-pill">Organisée</span><span class="soft-pill">Réactive</span><span class="soft-pill">Polyvalente</span><span class="soft-pill">Force de proposition</span></div></div>
+  <div style="margin-top:28px;" class="reveal-right"><div class="section-label" style="margin-bottom:20px;">Centres d'intérêt</div><div class="soft-grid"><span class="soft-pill">📸 Photographie</span><span class="soft-pill">✈️ Voyages</span><span class="soft-pill">🍳 Cuisine</span><span class="soft-pill">⚽ Sport</span></div></div>
+  <div style="margin-top:28px;" class="reveal-left"><div class="section-label" style="margin-bottom:20px;">Infos</div><div class="soft-grid"><span class="soft-pill">Français — Natif</span><span class="soft-pill">Anglais — Intermédiaire</span><span class="soft-pill">Permis B · Véhiculée</span><span class="soft-pill">Beaumes de Venise 84190</span></div></div>
+</section>
+
+<div class="divider"></div>
+
+<section id="contact">
+  <div class="reveal-blur"><div class="section-label">Restons en contact</div><h2 class="section-title">Contact</h2></div>
+  <div class="contact-grid reveal">
+    <div class="contact-card"><div class="contact-label">Email</div><div class="contact-value" id="emailCard"></div></div>
+    <div class="contact-card"><div class="contact-label">Téléphone</div><div class="contact-value">06 29 58 66 58</div></div>
+    <div class="contact-card"><div class="contact-label">Localisation</div><div class="contact-value">Beaumes de Venise, 84190</div></div>
+    <div class="contact-card"><div class="contact-label">Disponibilité</div><div class="contact-value">Ouverte aux opportunités</div></div>
+  </div>
+  <div class="contact-form reveal">
+    <div class="form-row"><div class="form-group"><label>Prénom</label><input type="text" placeholder="Jean"></div><div class="form-group"><label>Nom</label><input type="text" placeholder="Dupont"></div></div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="jean.dupont@email.com"></div>
+    <div class="form-group"><label>Message</label><textarea placeholder="Bonjour Olivia, je souhaitais..."></textarea></div>
+    <button class="form-submit" onclick="this.textContent='Message envoyé !';this.style.opacity='0.7';">Envoyer le message</button>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Olivia Duclaux — Graphiste Print &amp; Digital</span>
+  <span id="footerEmail" style="cursor:pointer;"></span>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-block"><div class="modal-dot" id="modalDot"></div><div><div class="modal-title" id="modalTitle"></div><div class="modal-subtitle" id="modalSubtitle"></div></div></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc" id="modalDesc"></p>
+      <div id="galleryGrid" class="gallery-grid"></div>
+      <button class="add-creation-btn" id="addBtn" onclick="triggerUpload()">+ Ajouter une création</button>
+      <input type="file" class="file-input" id="fileInput" accept="image/*" multiple onchange="handleUpload(event)">
+    </div>
+  </div>
+</div>
+
+<script>
+/* AURORA */
+var ac=document.getElementById('auroraCanvas'),actx=ac.getContext('2d'),AW,AH;
+function resizeA(){AW=ac.width=window.innerWidth;AH=ac.height=window.innerHeight;}
+resizeA();window.addEventListener('resize',resizeA);
+var orbs=[{x:0.1,y:0.2,r:0.55,h:350,s:80,l:80,spd:0.00016,phase:0},{x:0.85,y:0.5,r:0.5,h:25,s:85,l:75,spd:0.00012,phase:2.1},{x:0.4,y:0.85,r:0.45,h:340,s:75,l:82,spd:0.00020,phase:4},{x:0.9,y:0.1,r:0.4,h:35,s:80,l:78,spd:0.00015,phase:5.5}],at=0;
+function aurora(){at++;actx.clearRect(0,0,AW,AH);orbs.forEach(function(o){var ox=(o.x+Math.sin(at*o.spd*1.4+o.phase)*0.16)*AW,oy=(o.y+Math.cos(at*o.spd+o.phase*0.8)*0.13)*AH,rad=o.r*Math.max(AW,AH),a=0.18+Math.sin(at*o.spd*2.2+o.phase)*0.06,g=actx.createRadialGradient(ox,oy,0,ox,oy,rad);g.addColorStop(0,'hsla('+o.h+','+o.s+'%,'+o.l+'%,'+a+')');g.addColorStop(0.5,'hsla('+(o.h+15)+','+(o.s-10)+'%,'+(o.l+8)+'%,'+(a*0.3)+')');g.addColorStop(1,'hsla('+(o.h+30)+',60%,95%,0)');actx.beginPath();actx.fillStyle=g;actx.arc(ox,oy,rad,0,Math.PI*2);actx.fill();});requestAnimationFrame(aurora);}
+aurora();
+
+/* 3D NAME */
+function buildLine(t,id){var el=document.getElementById(id);el.innerHTML='';t.split('').forEach(function(c){var s=document.createElement('span');s.className='name-letter';s.textContent=c===' '?'\u00a0':c;el.appendChild(s);});}
+buildLine('Olivia','nameLine1');buildLine('Duclaux','nameLine2');
+var heroName=document.getElementById('heroName'),rx=0,ry=0,trx=0,try2=0;
+function lerp(a,b,t){return a+(b-a)*t;}
+function tick3d(){rx=lerp(rx,trx,0.055);ry=lerp(ry,try2,0.055);var sy=window.scrollY,prog=sy/window.innerHeight;if(heroName){heroName.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY('+(sy*0.15)+'px)';heroName.style.opacity=Math.max(0,1-prog*1.5);}requestAnimationFrame(tick3d);}
+tick3d();
+document.addEventListener('mousemove',function(e){if(window.scrollY>window.innerHeight*0.35)return;trx=-((e.clientY-window.innerHeight/2)/window.innerHeight)*6;try2=((e.clientX-window.innerWidth/2)/window.innerWidth)*10;});
+document.addEventListener('mouseleave',function(){trx=0;try2=0;});
+
+/* REVEAL */
+var revObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale,.reveal-blur').forEach(function(el){revObs.observe(el);});
+window.addEventListener('scroll',function(){document.querySelectorAll('.skill-card,.exp-card,.projet-card,.formation-card').forEach(function(card,i){var rect=card.getBoundingClientRect();if(rect.top<window.innerHeight-60&&!card.dataset.animated){card.dataset.animated='1';card.style.opacity='0';card.style.transform='translateY(28px) scale(0.97)';card.style.transition='opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1)';setTimeout(function(){card.style.opacity='1';card.style.transform='translateY(0) scale(1)';},( i%6)*60+30);}});},{passive:true});
+
+/* CIRCLES */
+function animateCircles(){document.querySelectorAll('.skill-circle .fill').forEach(function(el){if(!el.dataset.animated){var card=el.closest('.skill-card');if(card){var rect=card.getBoundingClientRect();if(rect.top<window.innerHeight-40){el.dataset.animated='1';el.style.strokeDashoffset=100-parseInt(el.dataset.level);}}}});}
+window.addEventListener('scroll',animateCircles,{passive:true});
+setTimeout(animateCircles,600);
+
+/* RADAR */
+var radarData=[{label:'Illustrator',value:100,color:'#e8436a'},{label:'WordPress',value:100,color:'#f7873a'},{label:'Facebook',value:95,color:'#e8436a'},{label:'TikTok',value:95,color:'#f7873a'},{label:'Photoshop',value:90,color:'#e8436a'},{label:'Instagram',value:90,color:'#f7873a'},{label:'SEO',value:90,color:'#e8436a'},{label:'Lightroom',value:75,color:'#f7873a'}];
+var rc=document.getElementById('radarChart'),rctx=rc.getContext('2d'),DPR=window.devicePixelRatio||2,RSIZE=320;
+rc.width=RSIZE*DPR;rc.height=RSIZE*DPR;rctx.scale(DPR,DPR);
+var RCX=RSIZE/2,RCY=RSIZE/2,RRAD=115,RN=radarData.length;
+radarData.forEach(function(d){var item=document.createElement('div');item.className='radar-legend-item';item.innerHTML='<div class="radar-legend-dot" style="background:'+d.color+'"></div>'+d.label;document.getElementById('radarLegend').appendChild(item);});
+radarData.forEach(function(d,i){var angle=(i/RN)*Math.PI*2-Math.PI/2,x=RCX+Math.cos(angle)*RRAD*1.3,y=RCY+Math.sin(angle)*RRAD*1.3;var span=document.createElement('span');span.textContent=d.label;span.style.cssText='position:absolute;font-size:11px;font-family:-apple-system,sans-serif;color:#999;white-space:nowrap;transform:translate(-50%,-50%);left:'+x+'px;top:'+y+'px;font-weight:500;';document.getElementById('radarLabels').appendChild(span);});
+function getRP(i,pct){var angle=(i/RN)*Math.PI*2-Math.PI/2;return{x:RCX+Math.cos(angle)*RRAD*pct,y:RCY+Math.sin(angle)*RRAD*pct};}
+function drawRadar(progress){rctx.clearRect(0,0,RSIZE,RSIZE);[0.25,0.5,0.75,1].forEach(function(ring){rctx.beginPath();for(var i=0;i<RN;i++){var p=getRP(i,ring);i===0?rctx.moveTo(p.x,p.y):rctx.lineTo(p.x,p.y);}rctx.closePath();rctx.strokeStyle='rgba(232,67,106,'+(ring===1?0.15:0.06)+')';rctx.lineWidth=0.5;rctx.stroke();});for(var i=0;i<RN;i++){var p=getRP(i,1);rctx.beginPath();rctx.moveTo(RCX,RCY);rctx.lineTo(p.x,p.y);rctx.strokeStyle='rgba(232,67,106,0.1)';rctx.lineWidth=0.5;rctx.stroke();}rctx.beginPath();radarData.forEach(function(d,i){var p=getRP(i,(d.value/100)*progress);i===0?rctx.moveTo(p.x,p.y):rctx.lineTo(p.x,p.y);});rctx.closePath();rctx.fillStyle='rgba(232,67,106,0.1)';rctx.fill();rctx.strokeStyle='#e8436a';rctx.lineWidth=2;rctx.stroke();radarData.forEach(function(d,i){var p=getRP(i,(d.value/100)*progress);rctx.beginPath();rctx.arc(p.x,p.y,4,0,Math.PI*2);rctx.fillStyle=d.color;rctx.fill();});}
+var radarStarted=false;
+new IntersectionObserver(function(entries){if(entries[0].isIntersecting&&!radarStarted){radarStarted=true;var start=null;function animR(ts){if(!start)start=ts;var prog=Math.min((ts-start)/1400,1),ease=1-Math.pow(1-prog,3);drawRadar(ease);if(prog<1)requestAnimationFrame(animR);else{var pulse=0;(function pulseFn(){pulse+=0.018;drawRadar(1+Math.sin(pulse)*0.01);requestAnimationFrame(pulseFn);})();}}requestAnimationFrame(animR);}},{threshold:0.2}).observe(rc);
+drawRadar(0);
+
+/* DATA */
+var skills={
+  wordpress:{title:'WordPress',subtitle:'CMS & sites web',color:'#21759b',desc:"Création et gestion de sites internet sous WordPress.",items:[]},
+  wix:{title:'Wix',subtitle:'CMS no-code',color:'#f7b731',desc:"Création de sites vitrines avec Wix.",items:[]},
+  shopify:{title:'Shopify',subtitle:'E-commerce',color:'#95bf47',desc:"Création et gestion de boutiques en ligne Shopify.",items:[]}
+};
+
+var projets={
+  catalogues_affiches:{
+    title:"Catalogues & Affiches",subtitle:"Print · Graphisme",color:"#e8436a",
+    desc:"Conception de catalogues, brochures et affiches print et digitaux pour différents clients.",
+    affiches:[
+      {src:"Affiche A4 Golf Orange x Toyota.jpg",name:"Affiche Golf Orange x Toyota"},
+      {src:"Affiche A4 golf orange.jpg",name:"Affiche Golf Orange"}
+    ],
+    catalogues:[
+      "catalogue toyota format pdf_page-0001.jpg",
+      "catalogue toyota format pdf_page-0002.jpg",
+      "catalogue toyota format pdf_page-0003.jpg",
+      "catalogue toyota format pdf_page-0004.jpg",
+      "catalogue toyota format pdf_page-0005.jpg",
+      "catalogue toyota format pdf_page-0006.jpg"
+    ],
+    items:[]
+  },
+  flyers:{
+    title:"Flyers",subtitle:"Graphisme · Communication",color:"#f7873a",
+    desc:"Création de flyers impactants pour événements, promotions et communication.",
+    items:[
+      {src:"flyer 1er PAGE POCHETTE GEMELLI.jpg",name:"Flyer Pochette Gemelli"},
+      {src:"flyer A5 Yam Orange offre accesoires auto école_Plan de travail 1.jpg",name:"Flyer Yam Orange Auto École"},
+      {src:"flyer atelier du camping car recto OK.jpg",name:"Flyer Atelier Camping Car"},
+      {src:"Flyer recto gemelli.jpg",name:"Flyer Recto Gemelli"},
+      {src:"Flyer Suzuki Juin 2025.jpg",name:"Flyer Suzuki Juin 2025"}
+    ]
+  },
+  social:{
+    title:"Visuels Réseaux Sociaux",subtitle:"Social Media · Digital",color:"#e8436a",
+    desc:"Création de contenus visuels adaptés à chaque plateforme sociale.",
+    items:[
+      {src:"black friday gemelli occasion nov 2025 instagram_Plan de travail 1.jpg",name:"Black Friday Gemelli"},
+      {src:"Fete-de-fin-dannee-Italmoto-RS.jpg",name:"Fête de fin d année Italmoto"},
+      {src:"fiat-500-offre-79-reseaux-sociaux.jpg",name:"Fiat 500 offre 79"},
+      {src:"GEMELLI-globale.jpg",name:"Gemelli Globale"},
+      {src:"JPO JANVIER 2025.jpg",name:"JPO Janvier 2025"},
+      {src:"JPO Juin 2025 Instagram.jpg",name:"JPO Juin 2025"},
+      {src:"JPO septembre 2025 Instagram.jpg",name:"JPO Septembre 2025"},
+      {src:"JPO-insta-JUIN-26.jpg",name:"JPO Insta Juin 2026"},
+      {src:"JPO-insta-mars-26.jpg",name:"JPO Insta Mars 2026"},
+      {src:"JPO-SEPTEMBRE-2024-HYUNDAI.jpg",name:"JPO Septembre 2024 Hyundai"},
+      {src:"JPO-SEPTEMBRE-2024-TAM.jpg",name:"JPO Septembre 2024 TAM"},
+      {src:"Visuel-OPE-FIAT-500-Occasion-Instagram.jpg",name:"Visuel OPE Fiat 500"},
+      {src:"yamaha-01.jpg",name:"Yamaha 01"}
+    ]
+  },
+  video:{
+    title:"Montage Vidéo & Motion Design",subtitle:"Vidéo · Animation",color:"#f7873a",
+    desc:"Production de contenus vidéo et animations pour les réseaux et le web.",
+    sections:[
+      {label:"CapCut",videos:[
+        {id:"svXRre6JgN0",name:"Présentation Gemelli"},
+        {id:"1-DKOZnnZsg",name:"Événement Hyundai Orange Semi 3C"},
+        {id:"OjHmlJqKvyE",name:"Événement Inspirations Locales Arbres"},
+        {id:"hDrvzC3HknY",name:"Lancement Alfa — Vidéo Réseaux Sociaux"}
+      ]},
+      {label:"Play Play",videos:[
+        {id:"y-aVGBR_twE",name:"Interview Collaborateur"}
+      ]}
+    ],
+    items:[]
+  },
+  digital:{
+    title:"Supports Digitaux",subtitle:"Digital · Email",color:"#f7873a",
+    desc:"Création de supports digitaux : bandeaux emailing, bandeaux mail et signatures de mail.",
+    sections:[
+      {label:"Bandeau Emailing",items:[
+        {src:"Visuel Facebook Golf Orange x Toyota.jpg",name:"Bandeau Emailing Golf Orange x Toyota"}
+      ]},
+      {label:"Bandeau Mail",items:[
+        {src:"black friday gemelli occasion nov 2025 bandeau site_Plan de travail 1.jpg",name:"Bandeau Black Friday Gemelli"},
+        {src:"JPO JUIN 2024 BANDEAU SITE_Plan de travail 1.jpg",name:"Bandeau JPO Juin 2024"}
+      ]},
+      {label:"Signature de Mail",items:[
+        {src:"SIGANTURE-JEEP.jpg",name:"Signature Jeep"},
+        {src:"Signature de mail Fete de fin 2 dannee 2024.jpg",name:"Signature Fête de fin d année 2024"},
+        {src:"SIGNATURE-FIAT.jpg",name:"Signature Fiat"}
+      ]}
+    ],
+    items:[]
+  },
+  print:{
+    title:"Supports Print",subtitle:"Print · Identité visuelle",color:"#f7873a",
+    desc:"Création de supports print pour différents clients : marque-pages, pochettes et roll-ups.",
+    sections:[
+      {label:"Marque-page",items:[
+        {src:"Marque page st valentin.jpg",name:"Marque-page Saint Valentin"}
+      ]},
+      {label:"Pochette",items:[
+        {src:"Pochette Fiat Orange-01.jpg",name:"Pochette Fiat Orange"}
+      ]},
+      {label:"Roll-up",items:[
+        {src:"Roll-UP Gemelli Mobilité 2_Plan de travail 1.jpg",name:"Roll-up Gemelli Mobilité"},
+        {src:"Roll-UP-Toyota-Orange-et-Carpentras.jpg",name:"Roll-up Toyota Orange et Carpentras"}
+      ]}
+    ],
+    items:[]
+  },
+  logos:{
+    title:"Logos & Animations",subtitle:"Identité visuelle · Motion",color:"#e8436a",
+    desc:"Création de logos et animations de marque pour différents clients.",
+    items:[
+      {src:"logo.jpg",name:"Logo",type:"image"},
+      {src:"Logo1.jpg",name:"Logo 1",type:"image"},
+      {src:"Logo2.jpg",name:"Logo 2",type:"image"},
+      {src:"logo4.mp4",name:"Logo animé",type:"video"}
+    ]
+  },
+  sites:{
+    title:"Création de Sites Internet",subtitle:"Web · WordPress & Wix",color:"#e8436a",
+    desc:"Création et gestion de sites web pour différents clients.",
+    sections:[
+      {label:"Cultive",badge:"WordPress",items:[
+        {src:"cultive-1.png",name:"Cultive — Page 1"},
+        {src:"cultive-2.png",name:"Cultive — Page 2"},
+        {src:"cultive-3.png",name:"Cultive — Page 3"}
+      ]},
+      {label:"Gemelli Mobilité",badge:"WordPress",items:[
+        {src:"gemelli-1.png",name:"Gemelli Mobilité — Page 1"},
+        {src:"gemelli-2.png",name:"Gemelli Mobilité — Page 2"}
+      ]},
+      {label:"Nova",badge:"Wix",items:[
+        {src:"nova-1.png",name:"Nova — Page 1"},
+        {src:"nova-2.png",name:"Nova — Page 2"},
+        {src:"nova-3.png",name:"Nova — Page 3"}
+      ]}
+    ],
+    items:[]
+  }
+};
+
+var currentKey=null,currentType=null;
+
+function openModal(key){
+  currentKey=key;currentType='skill';
+  var s=skills[key];if(!s)return;
+  document.getElementById('modalDot').style.background=s.color;
+  document.getElementById('modalTitle').textContent=s.title;
+  document.getElementById('modalSubtitle').textContent=s.subtitle;
+  document.getElementById('modalDesc').textContent=s.desc;
+  renderSimpleGallery(s.items,false);
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function openProjet(key){
+  currentKey=key;currentType='projet';
+  var p=projets[key];if(!p)return;
+  document.getElementById('modalDot').style.background=p.color;
+  document.getElementById('modalTitle').textContent=p.title;
+  document.getElementById('modalSubtitle').textContent=p.subtitle;
+  document.getElementById('modalDesc').textContent=p.desc;
+  var grid=document.getElementById('galleryGrid');
+  grid.innerHTML='';grid.className='gallery-grid';
+  if(key==='catalogues_affiches'){renderCataloguesAffiches();}
+  else if(key==='flyers'){renderSimpleGallery(p.items,true);}
+  else if(key==='social'){renderSimpleGallery(p.items,true);}
+  else if(key==='video'){renderVideo();}
+  else if(key==='sites'){renderSites();}else if(key==='logos'){renderLogos();}else if(key==='print'){renderPrint();}else if(key==='digital'){renderDigital();}
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function renderDigital(){
+  var grid=document.getElementById('galleryGrid');
+  grid.style.display='block';grid.className='';
+  var p=projets.digital;
+  p.sections.forEach(function(section,si){
+    if(si>0){var sep=document.createElement('div');sep.className='section-sep';grid.appendChild(sep);}
+    var tw=document.createElement('div');tw.className='popup-section-title';tw.textContent=section.label;grid.appendChild(tw);
+    var sg=document.createElement('div');sg.className='gallery-grid digital-grid';
+    section.items.forEach(function(item){
+      var el=document.createElement('div');el.className='gallery-item';
+      el.innerHTML='<div class="gallery-img-wrap"><img src="'+item.src+'" alt="'+item.name+'" loading="lazy"><a class="gallery-download" href="'+item.src+'" download="'+item.name+'">↓</a></div><div class="gallery-info"><div class="gallery-name">'+item.name+'</div></div>';
+      sg.appendChild(el);
+    });
+    grid.appendChild(sg);
+  });
+}
+
+function renderPrint(){
+  var grid=document.getElementById('galleryGrid');
+  grid.style.display='block';grid.className='';
+  var p=projets.print;
+  p.sections.forEach(function(section,si){
+    if(si>0){var sep=document.createElement('div');sep.className='section-sep';grid.appendChild(sep);}
+    var tw=document.createElement('div');tw.className='popup-section-title';tw.textContent=section.label;grid.appendChild(tw);
+    var sg=document.createElement('div');sg.className='gallery-grid small-grid';
+    section.items.forEach(function(item){
+      var el=document.createElement('div');el.className='gallery-item';
+      el.innerHTML='<div class="gallery-img-wrap"><img src="'+item.src+'" alt="'+item.name+'" loading="lazy"><a class="gallery-download" href="'+item.src+'" download="'+item.name+'">↓</a></div><div class="gallery-info"><div class="gallery-name">'+item.name+'</div></div>';
+      sg.appendChild(el);
+    });
+    grid.appendChild(sg);
+  });
+}
+
+function renderLogos(){
+  var grid=document.getElementById('galleryGrid');
+  grid.style.display='block';grid.className='gallery-grid small-grid';
+  var p=projets.logos;
+  p.items.forEach(function(item){
+    var el=document.createElement('div');el.className='gallery-item';
+    if(item.type==='video'){
+      el.innerHTML='<div class="gallery-img-wrap" style="background:#1a1a1a;"><video src="'+item.src+'" controls style="width:100%;height:100%;object-fit:contain;display:block;"></video></div><div class="gallery-info"><div class="gallery-name">'+item.name+' <span style="font-size:10px;color:#e8436a;font-weight:600;">ANIMATION</span></div></div>';
+    } else {
+      el.innerHTML='<div class="gallery-img-wrap"><img src="'+item.src+'" alt="'+item.name+'" loading="lazy"><a class="gallery-download" href="'+item.src+'" download="'+item.name+'">↓</a></div><div class="gallery-info"><div class="gallery-name">'+item.name+'</div></div>';
+    }
+    grid.appendChild(el);
+  });
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';currentKey=null;currentType=null;}
+function closeModalOutside(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+function renderSimpleGallery(items,small){
+  var grid=document.getElementById('galleryGrid');
+  grid.innerHTML='';
+  grid.className=small?'gallery-grid small-grid':'gallery-grid';
+  if(!items||!items.length){grid.innerHTML='<div class="gallery-empty">Aucune création.<br>Active le mode édition (Ctrl+Shift+E) pour ajouter tes fichiers.</div>';return;}
+  items.forEach(function(item,i){
+    var el=document.createElement('div');el.className='gallery-item';
+    el.innerHTML='<div class="gallery-img-wrap"><img src="'+item.src+'" alt="'+item.name+'" loading="lazy"><button class="gallery-delete" onclick="deleteItem('+i+')">×</button><a class="gallery-download" href="'+item.src+'" download="'+item.name+'">↓</a></div><div class="gallery-info"><div class="gallery-name">'+item.name+'</div></div>';
+    grid.appendChild(el);
+  });
+}
+
+function renderCataloguesAffiches(){
+  var grid=document.getElementById('galleryGrid');
+  grid.style.display='block';grid.className='';
+  var p=projets.catalogues_affiches;
+  var t1=document.createElement('div');t1.className='popup-section-title';t1.textContent='Affiches';grid.appendChild(t1);
+  var ag=document.createElement('div');ag.className='gallery-grid';
+  p.affiches.forEach(function(item){
+    var el=document.createElement('div');el.className='gallery-item';
+    el.innerHTML='<div class="gallery-img-wrap"><img src="'+item.src+'" alt="'+item.name+'" loading="lazy"><a class="gallery-download" href="'+item.src+'" download="'+item.name+'">↓</a></div><div class="gallery-info"><div class="gallery-name">'+item.name+'</div></div>';
+    ag.appendChild(el);
+  });
+  grid.appendChild(ag);
+  var sep=document.createElement('div');sep.className='section-sep';grid.appendChild(sep);
+  var t2=document.createElement('div');t2.className='popup-section-title';t2.textContent='Catalogue Toyota';grid.appendChild(t2);
+  var cg=document.createElement('div');cg.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:4px;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(232,67,106,0.12);';
+  p.catalogues.forEach(function(src,i){var img=document.createElement('img');img.src=src;img.alt='Page '+(i+1);img.loading='lazy';img.style.cssText='width:100%;height:auto;display:block;';cg.appendChild(img);});
+  grid.appendChild(cg);
+  var dl=document.createElement('a');dl.href='catalogue toyota format pdf.pdf';dl.download='Catalogue Toyota';dl.style.cssText='display:inline-flex;align-items:center;gap:6px;margin-top:16px;border:1.5px solid rgba(232,67,106,0.3);color:#e8436a;padding:8px 20px;border-radius:980px;font-size:13px;text-decoration:none;';dl.textContent='↓ Télécharger le catalogue PDF';
+  grid.appendChild(dl);
+}
+
+function renderVideo(){
+  var grid=document.getElementById('galleryGrid');
+  grid.style.display='block';grid.className='';
+  var p=projets.video;
+  p.sections.forEach(function(section,si){
+    if(si>0){var sep=document.createElement('div');sep.className='section-sep';grid.appendChild(sep);}
+    var tw=document.createElement('div');tw.className='popup-section-title';tw.textContent=section.label;grid.appendChild(tw);
+    var vg=document.createElement('div');vg.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;';
+    section.videos.forEach(function(video){
+      var el=document.createElement('div');el.className='yt-card';
+      el.onclick=function(){window.open('https://www.youtube.com/watch?v='+video.id,'_blank');};
+      var thumb=document.createElement('div');thumb.className='yt-thumb';
+      var img=document.createElement('img');
+      img.src='https://img.youtube.com/vi/'+video.id+'/maxresdefault.jpg';
+      img.onerror=function(){this.src='https://img.youtube.com/vi/'+video.id+'/hqdefault.jpg';};
+      img.alt=video.name;img.loading='lazy';
+      var play=document.createElement('div');play.className='yt-play';
+      play.innerHTML='<div class="yt-play-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>';
+      thumb.appendChild(img);thumb.appendChild(play);
+      var label=document.createElement('div');label.className='yt-label';label.textContent=video.name;
+      el.appendChild(thumb);el.appendChild(label);
+      vg.appendChild(el);
+    });
+    grid.appendChild(vg);
+  });
+}
+
+function renderSites(){
+  var grid=document.getElementById('galleryGrid');
+  grid.style.display='block';grid.className='';
+  var p=projets.sites;
+  p.sections.forEach(function(section,si){
+    if(si>0){var sep=document.createElement('div');sep.className='section-sep';grid.appendChild(sep);}
+    var tw=document.createElement('div');tw.className='popup-section-title';
+    tw.innerHTML=section.label+'<span class="popup-badge">'+section.badge+'</span>';
+    grid.appendChild(tw);
+    var sg=document.createElement('div');sg.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;';
+    section.items.forEach(function(item){
+      var el=document.createElement('div');el.className='gallery-item';
+      el.innerHTML='<div class="gallery-img-wrap"><img src="'+item.src+'" alt="'+item.name+'" loading="lazy"><a class="gallery-download" href="'+item.src+'" download="'+item.name+'">↓</a></div><div class="gallery-info"><div class="gallery-name">'+item.name+'</div></div>';
+      sg.appendChild(el);
+    });
+    grid.appendChild(sg);
+  });
+}
+
+function deleteItem(index){
+  var store=currentType==='skill'?skills:projets;
+  store[currentKey].items.splice(index,1);
+  renderSimpleGallery(store[currentKey].items,currentKey==='flyers'||currentKey==='social');
+}
+
+function triggerUpload(){document.getElementById('fileInput').click();}
+function handleUpload(e){
+  var store=currentType==='skill'?skills:projets;
+  Array.from(e.target.files).forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(ev){store[currentKey].items.push({src:ev.target.result,name:file.name.replace(/\.[^/.]+$/,'')});renderSimpleGallery(store[currentKey].items,currentKey==='flyers'||currentKey==='social');};
+    reader.readAsDataURL(file);
+  });
+  e.target.value='';
+}
+
+/* EDIT MODE */
+var editMode=false;
+document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.shiftKey&&e.key==='E'){editMode=!editMode;document.body.classList.toggle('edit-mode',editMode);var btn=document.getElementById('addBtn');if(btn)btn.classList.toggle('visible',editMode);var toast=document.createElement('div');toast.textContent=editMode?'Mode édition activé':'Mode édition désactivé';toast.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 22px;border-radius:980px;font-size:13px;z-index:9999;';document.body.appendChild(toast);setTimeout(function(){toast.remove();},2200);}});
+
+/* EMAIL */
+(function(){var u='duclauxolivia1',d='gmail.com';var el=document.getElementById('emailCard');if(el){var a=document.createElement('a');a.href='mailto:'+u+'@'+d;a.textContent=u+'@'+d;a.style.cssText='color:#e8436a;text-decoration:none;font-weight:600;';el.appendChild(a);}var fe=document.getElementById('footerEmail');if(fe){fe.textContent=u+'@'+d;fe.onclick=function(){window.location.href='mailto:'+u+'@'+d;};}})();
+</script>
+</body>
+</html>
